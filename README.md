@@ -26,7 +26,7 @@ allprojects {
 ```
 Add this in your `build.gradle`
 ```groovy
-implementation 'com.github.M-H-N:TextAPICache:v1.0.1'
+implementation 'com.github.M-H-N:TextAPICache:v1.3'
 ```
 Do not forget to add internet and accessing network state permissions in manifest if already not present
 ```xml
