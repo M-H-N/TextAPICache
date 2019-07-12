@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">TextAPICacheExample</string>
+    <string name="app_name">TextAPICache</string>
+    <string name="action_settings">Settings</string>
 </resources>
