@@ -97,6 +97,71 @@ public class TextAPICache {
         return this;
     }
 
+    public TextAPICache get(String url, long expireLimit) {
+        return get(url, TextAPICacheTools.convertUrlIntoCacheName(url, context), false, expireLimit);
+    }
+
+    public TextAPICache get(String url, String cacheName, long expireLimit) {
+        return get(url, cacheName, false, expireLimit);
+    }
+
+    public TextAPICache get(String url, boolean forceOnline, long expireLimit) {
+        return get(url, TextAPICacheTools.convertUrlIntoCacheName(url, context), forceOnline, expireLimit);
+    }
+
+    public TextAPICache get(String url, String cacheName, boolean forceOnline, long expireLimit) {
+        if (forceOnline) {
+            if (TextAPICacheTools.isInternetAvailable(context)) {
+                getDataFromServer(url, cacheName);
+            } else {
+                if (listener != null)
+                    listener.onCacheError(url, cacheName, new InternetNotAvailableException());
+            }
+        } else {
+            if (CacheManager.doesCacheExists(cacheName, context)) {
+                String result = CacheManager.loadCacheIfValid(cacheName, context, expireLimit);
+                if (CacheManager.isCacheValid(cacheName, context, expireLimit)) {
+                    if (listener != null)
+                        listener.onCacheLoaded(url, cacheName, result);
+                } else {
+                    if (TextAPICacheTools.isInternetAvailable(context)) {
+                        getDataFromServer(url, cacheName);
+                    } else {
+                        switch (mode) {
+                            case NORMAL_MODE:
+                                if (listener != null)
+                                    listener.onCacheError(url, cacheName, new InternetNotAvailableException());
+                                break;
+                            case MOST_OFFLINE_MODE:
+                                if (CacheManager.doesCacheExists(cacheName, context)) {
+                                    String response = CacheManager.loadCache(cacheName, context);
+                                    if (response != null) {
+                                        if (listener != null)
+                                            listener.onCacheLoaded(url, cacheName, response);
+                                    } else {
+                                        if (listener != null)
+                                            listener.onCacheError(url, cacheName, new RequestUnsuccessfulException());
+                                    }
+                                } else {
+                                    if (listener != null)
+                                        listener.onCacheError(url, cacheName, new RequestUnsuccessfulException());
+                                }
+                                break;
+                        }
+                    }
+                }
+            } else {
+                if (TextAPICacheTools.isInternetAvailable(context)) {
+                    getDataFromServer(url, cacheName);
+                } else {
+                    if (listener != null)
+                        listener.onCacheError(url, cacheName, new InternetNotAvailableException());
+                }
+            }
+        }
+        return this;
+    }
+
     private void getDataFromServer(final String url, final String cacheName) {
         try {
             final Request request = new Request.Builder()

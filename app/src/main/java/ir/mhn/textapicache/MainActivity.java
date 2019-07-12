@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements TextAPICacheListe
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private TextView txtTest;
-    private TextAPICache apiCache;
+    private TextAPICache apiCache = new TextAPICache(this, this, TextAPICacheMode.NORMAL_MODE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,24 @@ public class MainActivity extends AppCompatActivity implements TextAPICacheListe
 
         txtTest = findViewById(R.id.txtTest);
         apiCache = new TextAPICache(this, this, TextAPICacheMode.MOST_OFFLINE_MODE);
+        TextAPICache textAPICache = new TextAPICache(this, new TextAPICacheListener() {
+            @Override
+            public void onCacheLoaded(String url, String cacheName, String cacheData) {
+
+            }
+
+            @Override
+            public void onCacheError(String url, String cacheName, Exception e) {
+
+            }
+        }, TextAPICacheMode.NORMAL_MODE);
+
+        textAPICache
+                .get("https://en-maktoob.yahoo.com/?p=us", "YahooCache", false)
+                .get("https://github.com", "GitHubCache")
+                .get("https://www.microsoft.com/en-us/", true)
+                .get("https://www.apple.com/")
+                .get("https://jitpack.io/", "JitPackCache", false, 10000);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -41,13 +59,11 @@ public class MainActivity extends AppCompatActivity implements TextAPICacheListe
 
     @Override
     public void onCacheLoaded(String url, String cacheName, String cacheData) {
-        Log.d(TAG, "onCacheLoaded: flag-00");
-        txtTest.setText(cacheData);
+
     }
 
     @Override
     public void onCacheError(String url, String cacheName, Exception e) {
-        Log.d(TAG, "onCacheError: flag-00");
-        txtTest.setText(e.getMessage());
+
     }
 }
