@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements TextAPICacheListe
 
 ## License:
 ```
-    Copyright 2018 Mahmoud HodaeeNia
+    Copyright 2019 Mahmoud HodaeeNia
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
