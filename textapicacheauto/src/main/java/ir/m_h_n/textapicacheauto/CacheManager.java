@@ -165,7 +165,7 @@ public class CacheManager {
     private static boolean saveCache(String data, File cacheFile) {
         if (data == null)
             throw new NullPointerException("The value data cannot be null!");
-        String fetchedData = (new Date().getTime()) + TIME_POSTFIX + data;
+        String fetchedData = (new Date().getTime()) + TIME_POSTFIX + "\n" + data;
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(cacheFile);

@@ -1,7 +1,10 @@
 package ir.mhn.textapicacheexample;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import ir.mhn.textapicache.R;
 
 public class MainActivity extends AppCompatActivity {
 
